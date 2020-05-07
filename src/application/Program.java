@@ -23,7 +23,7 @@ public class Program {
 			//Open database
 			conn = DB.openConnection();
 			
-			//create a SQL command
+			//create a SQL command to add new data into Db
 			ps = conn.prepareStatement(
 					"INSERT INTO department "+
 					"(Name) "+
@@ -31,9 +31,11 @@ public class Program {
 					"(?)");
 			//Replace the '?' signs
 			ps.setString(1, "New Department");
-			//Write the new Values
+			//Execute command
 			ps.executeUpdate();
-			
+			//It's necessary closing it before creating a new prepared statement
+			DB.closeStatement(ps);
+
 			//Create statement to read
 			st = conn.createStatement();
 			//Create SQL Command
@@ -44,6 +46,18 @@ public class Program {
 				System.out.println(rs.getInt("Id") + ", " + rs.getString("Name"));
 			}
 			
+			//Create a SQL command to update an existing data
+			ps = conn.prepareStatement(
+					"UPDATE department "+
+					"SET Name = ? "+
+					"WHERE "+
+					"(Id = ?)");
+			//Replace the '?' signs
+			ps.setString(1, "Changed Department");
+			ps.setInt(2, 5);
+			//execute command
+			ps.executeUpdate();
+
 		}
 		catch (SQLException exception) {
 			System.out.println(exception.getMessage());
