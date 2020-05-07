@@ -36,16 +36,6 @@ public class Program {
 			//It's necessary closing it before creating a new prepared statement
 			DB.closeStatement(ps);
 
-			//Create statement to read
-			st = conn.createStatement();
-			//Create SQL Command
-			rs = st.executeQuery("select * from department");
-			//Select the next line from database
-			while(rs.next()) {
-				//get the values from specific Columns
-				System.out.println(rs.getInt("Id") + ", " + rs.getString("Name"));
-			}
-			
 			//Create a SQL command to update an existing data
 			ps = conn.prepareStatement(
 					"UPDATE department "+
@@ -57,6 +47,28 @@ public class Program {
 			ps.setInt(2, 5);
 			//execute command
 			ps.executeUpdate();
+			//Close Statement
+			DB.closeStatement(ps);
+			
+			//Create a SQL Command to Delete a row
+			ps = conn.prepareStatement(
+					"DELETE FROM department "+
+					"WHERE "+
+					"ID = ?");
+			//Replace the '?' signs
+			ps.setInt(1, 6);
+			//Execute command
+			ps.executeUpdate();
+			
+			//Create statement to read
+			st = conn.createStatement();
+			//Create SQL Command
+			rs = st.executeQuery("select * from department");
+			//Select the next line from database
+			while(rs.next()) {
+				//get the values from specific Columns
+				System.out.println(rs.getInt("Id") + ", " + rs.getString("Name"));
+			}
 
 		}
 		catch (SQLException exception) {
