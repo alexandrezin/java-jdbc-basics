@@ -23,6 +23,9 @@ public class Program {
 			//Open database
 			conn = DB.openConnection();
 			
+			//Set auto commit to false, in order to do all the operations
+			conn.setAutoCommit(false);
+			
 			//create a SQL command to add new data into Db
 			ps = conn.prepareStatement(
 					"INSERT INTO department "+
@@ -50,6 +53,8 @@ public class Program {
 			//Close Statement
 			DB.closeStatement(ps);
 			
+			conn.commit();
+			
 			//Create a SQL Command to Delete a row
 			ps = conn.prepareStatement(
 					"DELETE FROM department "+
@@ -72,6 +77,12 @@ public class Program {
 
 		}
 		catch (SQLException exception) {
+			try {
+				//rollback the things between commit();
+				conn.rollback();
+			} catch (SQLException e2) {
+				System.out.println(e2.getMessage());
+			}
 			System.out.println(exception.getMessage());
 		}
 		//Close all Statements
